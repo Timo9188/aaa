@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:aop="http://www.springframework.org/schema/aop"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xmlns:tx="http://www.springframework.org/schema/tx"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans 
+         http://www.springframework.org/schema/beans/spring-beans-3.2.xsd
+		http://www.springframework.org/schema/tx 
+		http://www.springframework.org/schema/tx/spring-tx-3.2.xsd
+		http://www.springframework.org/schema/aop 
+		http://www.springframework.org/schema/aop/spring-aop-3.2.xsd
+		http://www.springframework.org/schema/context 
+		http://www.springframework.org/schema/context/spring-context-3.2.xsd">
+      <!-- 映入配置文件 -->
+      <bean class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
+      		<property name="location" value="classpath:jdbc.properties"></property>
+      </bean>
+	  <!-- 配置数据源 -->
+      <bean id="dataSource" class="org.apache.ibatis.datasource.pooled.PooledDataSource" >
+       		<property name="url" value="${jdbc.url}"/>
+       		<property name="driver" value="${jdbc.driver}"/>
+       		<property name="username" value="${jdbc.username}"/>
+       		<property name="password" value="${jdbc.password}"/>
+      </bean>
+      <!-- 配置sqlsessionFactory -->
+	  <bean id="sessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">
+	      <!-- 注入数据源 -->
+	      <property name="dataSource" ref="dataSource"/>
+	      <!-- 注册实体类型别名 -->
+	      <property name="typeAliasesPackage" value="com.clevertree.entity"/>
+	      <!-- 注册的Mapper文件 -->
+	      <property name="mapperLocations" value="classpath:com/clevertree/dao/*.xml"/>
+	  </bean>
+	  <!-- 配置SqlSessionTemplate -->
+	  <bean class="org.mybatis.spring.SqlSessionTemplate">
+	  		<constructor-arg index="0" ref="sessionFactory"/>
+	  		<constructor-arg index="1" value="BATCH"/>
+	  </bean>
+	  <!-- 事务管理者  -->
+	  <bean id="tx" class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
+	  	<property name="dataSource" ref="dataSource"/>
+	  </bean>
+	  <tx:annotation-driven transaction-manager="tx"/>
+	  <!-- 扫描DAO -->
+	  <context:component-scan base-package="com.clevertree.dao"/>
+	  <context:component-scan base-package="com.clevertree.service"/>
+</beans>

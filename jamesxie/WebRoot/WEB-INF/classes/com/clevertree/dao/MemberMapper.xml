@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.clevertree.dao.IMemberDao">
+	<select id="queryMem" resultType="Member" parameterType="int">
+	    select * from member where id=#{id}
+	</select>
+
+	<!-- <insert id="save" parameterType="User">
+		<selectKey keyProperty="id" resultType="int" order="AFTER">
+			select last_insert_id()
+		</selectKey>
+		insert into t_user(name,birth) values(#{name},#{birth,jdbcType=DATE,javaType=date})
+	</insert> -->
+	<insert id="saveMem" parameterType="Member" >
+        <selectKey keyProperty="id" resultType="int" order="AFTER">
+			select last_insert_id()
+		</selectKey>    
+        insert into member(Mem_id,password,name,address,phone,sex,source,guardian,Class_type,Class_advisor
+						,Parenting_count,Feature_count,Register_date,Swim_cost,Swim_count,Pleasure_cost,
+						Pleasure_count,Class_deadline,freezed,Freeze_date) 
+						values(#{memid},#{password},#{name},#{address},#{phone},#{sex},#{source},#{guardian}
+						,#{clatype},#{advisor},#{parcount},#{feacount},#{regdate,jdbcType=DATE,javaType=date},
+						#{swimcost},#{swimcount},#{pleasurecost},#{pleasurecount},#{cladeadline,jdbcType=DATE,javaType=date},
+						#{freezed},#{freezedate,jdbcType=DATE,javaType=date})    
+	</insert>
+	<delete id="deleteMem" parameterType="int">
+		delete * from member where id=#{id}	
+	</delete>
+	<update id="updateMem" parameterType="Member">
+		 update member set Mem_id=#{memid},password=#{password},name=#{name},address=#{address},phone=#{phone},
+		 			sex=#{sex},source=#{source},guardian=#{guardian},Class_type=#{clatype},Class_advisor=#{advisor}
+					,Parenting_count=#{parcount},Feature_count=#{feacount},Register_date=#{regdate,jdbcType=DATE,javaType=date}
+					,Swim_cost=#{swimcost},Swim_count=#{swimcount},Pleasure_cost=#{pleasurecost}
+					,Pleasure_count=#{pleasurecount},Class_deadline=#{cladeadline,jdbcType=DATE,javaType=date},
+					freezed=#{freezed},Freeze_date=#{freezedate,jdbcType=DATE,javaType=date}
+	
+	</update>
+
+</mapper>
